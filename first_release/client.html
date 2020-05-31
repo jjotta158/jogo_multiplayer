@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #screen{
+            border:10px solid #ccc;
+            image-rendering:pixelated;
+            image-rendering:crisp-edges;
+            image-rendering:-moz-crisp-edges;
+            width:400px;
+            height:400px;  
+        }
+    </style>
+</head>
+<body>
+    <canvas id="screen" width="10" height="10"></canvas>
+    <script>
+        const screen = document.getElementById('screen')
+        const context = screen.getContext('2d')
+
+        const game = {
+            players: [
+                {
+                    x:1,
+                    y:1
+                },
+                {
+                    x:9,
+                    y:9
+                },
+            ],
+            fruits:[
+                {
+                    x:3,
+                    y:1
+                }
+            ]
+        }
+        renderScreen()
+        function renderScreen() {
+            context.fillStyle = 'white';
+            context.fillRect(0,0,10,10)
+            game.players.map(player => {
+                context.fillStyle = 'black'
+                context.fillRect(player.x, player.y,1,1)
+            });
+            game.fruits.map(fruit => {
+                context.fillStyle = 'green'
+                context.fillRect(fruit.x, fruit.y,1,1)
+            });
+
+            requestAnimationFrame(renderScreen)
+        }
+    </script>
+</body>
+</html>
