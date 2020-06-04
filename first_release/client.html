@@ -46,20 +46,23 @@
 
             function movePlayer(command) {
                 const player = game.state.players[command.playerId]
-                
-                switch (command.move) {
-                    case 'ArrowLeft':
-                        return player.x = (player.x > 0) ? player.x - 1 : player.x
-                    case 'ArrowRight':
-                        return player.x = (player.x < 9) ? player.x + 1 : player.x
-                    case 'ArrowUp':
-                        return player.y = (player.y > 0) ?
-                            player.y - 1 : player.y
-                    case 'ArrowDown':
+                const acceptedMoves = {
+                    ArrowUp(player) {
+                        return player.y = (player.y > 0) ? player.y - 1 : player.y
+                    },
+                    ArrowDown(player) {
                         return player.y = (player.y < 9) ? player.y + 1 : player.y
+                    },
+                    ArrowLeft(player) {
+                        return player.x = (player.x > 0) ? player.x - 1 : player.x
+                    },
+                    ArrowRight(player) {
+                        return player.x = (player.x < 9) ? player.x + 1 : player.x
+                    }
                 }
-                
+                return acceptedMoves[command.move](player)
             }
+            
             const state = {
                 players: {
                     'player1': {
@@ -88,8 +91,8 @@
         function createKeyboardListener() {
             document.addEventListener('keydown', handleKeydown)
 
-            const state = { 
-                observers:[]
+            const state = {
+                observers: []
             }
 
             function subscribe(observerFunction) {
@@ -97,6 +100,9 @@
             }
 
             function notifyAll(command) {
+                if(!verifyIfTheKeyPressedIsValid(command.move)) {
+                    return false;
+                }
                 for (observerFunction of state.observers) {
                     observerFunction(command)
                 }
@@ -117,6 +123,11 @@
                 notifyAll
             }
         }
+
+    function verifyIfTheKeyPressedIsValid(key) {
+        let validKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'];
+        return (validKeys.indexOf(key) != -1) ? true : false
+    }
     </script>
 </body>
 
